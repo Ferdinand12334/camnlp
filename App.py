@@ -21,9 +21,18 @@ from nlp_engine   import analyze_text
 from data_collector import run_collection
 
 # ── Page config ───────────────────────────────────────────────────────────────
+# ✅ AFTER — replace with this
+from PIL import Image
+import os
+
+# Load Cameroon flag
+_flag_path = os.path.join(os.path.dirname(__file__), "flag.png")
+_flag_img  = Image.open(_flag_path) if os.path.exists(_flag_path) else "🇨🇲"
+
 st.set_page_config(
     page_title="CamNLP — Societal Analysis System",
-    page_icon="🇨🇲", layout="wide",
+    page_icon=_flag_img,
+    layout="wide",
     initial_sidebar_state="expanded",
 )
 
