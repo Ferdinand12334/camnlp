@@ -23,7 +23,7 @@ from data_collector import run_collection
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CamNLP — Societal Analysis System",
-    page_icon="🌍", layout="wide",
+    page_icon="🇨🇲", layout="wide",
     initial_sidebar_state="expanded",
 )
 
@@ -508,7 +508,7 @@ def page_login():
         <div style='text-align:center;padding:20px;
              background:linear-gradient(135deg,#1F4E79,#2E75B6);
              border-radius:12px;color:white;margin-bottom:24px;'>
-            <div style='font-size:2.8rem'>🌍</div>
+            <div style='font-size:2.8rem'>🇨🇲</div>
             <h2 style='color:white;margin:4px 0'>{tr["app_title"]}</h2>
             <p style='color:#BDD7EE;margin:0'>{tr["app_subtitle"]}</p>
         </div>
@@ -563,7 +563,7 @@ def sidebar_nav():
         st.markdown(f"""
         <div style='padding:14px;background:#1a3c5e;border-radius:8px;
                     margin-bottom:16px;text-align:center;'>
-            <div style='color:white;font-size:1.1rem;font-weight:700'>🌍 CamNLP</div>
+            <div style='color:white;font-size:1.1rem;font-weight:700'>🇨🇲 CamNLP</div>
             <div style='color:#8899aa;font-size:.75rem'>{tr["app_subtitle"]}</div>
         </div>
         """, unsafe_allow_html=True)
