@@ -368,7 +368,6 @@ def logout():
 # ═════════════════════════════════════════════════════════════════════════════
 # DATA HELPERS
 # ═════════════════════════════════════════════════════════════════════════════
-@st.cache_data(ttl=60)
 def load_all_records(limit=2000):
     session = get_session()
     rows = (
@@ -391,7 +390,6 @@ def load_all_records(limit=2000):
     df["Score"] = pd.to_numeric(df["Score"], errors="coerce").fillna(0)
     return df
 
-@st.cache_data(ttl=300)
 def load_topics():
     session = get_session()
     topics  = session.query(Topic).all()
@@ -600,7 +598,18 @@ def sidebar_nav():
 
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE: DASHBOARD
-# ═════════════════════════════════════════════════════════════════════════════
+# ══════════════
+def page_dashboard():
+    tr = t()
+    col_title, col_btn = st.columns([4, 1])
+    with col_title:
+        st.markdown(f"<div class='section-header'>{tr['dashboard_title']}</div>",
+                    unsafe_allow_html=True)
+    with col_btn:
+        if st.button("🔄 Refresh", use_container_width=True):
+            st.rerun()  # ← manual refresh button
+
+    df = load_all_records()  # now always fetches fresh from DB═══════════════════════════════════════════════════════════════
 def page_dashboard():
     tr = t()
     st.markdown(f"<div class='section-header'>{tr['dashboard_title']}</div>",
@@ -746,6 +755,18 @@ def page_data_collection():
             use_container_width=True, height=320)
     else:
         st.info(tr["no_records"])
+
+pb.progress(1.0)
+            # ✅ These lines force dashboard to reload fresh data
+            st.cache_data.clear()  # clear any remaining cache
+            st.success(tr["collection_complete"])
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric(tr["collected"],  result["collected"])
+            m2.metric(tr["saved"],      result["saved"])
+            m3.metric(tr["duplicates"], result["duplicates"])
+            m4.metric(tr["filtered"],   result["filtered"])
+            time.sleep(2)
+            st.rerun()  # ← forces entire app to reload with fresh data
 
 
 # ═════════════════════════════════════════════════════════════════════════════
