@@ -11,24 +11,22 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
+from PIL import Image
+import os
 import time
 
 from database import (
     init_db, get_session,
     TextData, AnalysisResult, Topic, User, Report, verify_user
 )
-from nlp_engine   import analyze_text
+from nlp_engine     import analyze_text
 from data_collector import run_collection
 
-# ── Page config ───────────────────────────────────────────────────────────────
-# ✅ AFTER — replace with this
-from PIL import Image
-import os
-
-# Load Cameroon flag
+# ── Flag icon ─────────────────────────────────────────────────────────────────
 _flag_path = os.path.join(os.path.dirname(__file__), "flag.png")
 _flag_img  = Image.open(_flag_path) if os.path.exists(_flag_path) else "🇨🇲"
 
+# ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CamNLP — Societal Analysis System",
     page_icon=_flag_img,
@@ -47,7 +45,6 @@ TRANSLATIONS = {
         "app_title":            "CamNLP — Societal Analysis System",
         "app_subtitle":         "Cameroon Societal Trend Intelligence",
         "language_toggle":      "🌐 Language",
-        # Navigation
         "nav_dashboard":        "📊 Dashboard",
         "nav_collection":       "🔍 Data Collection",
         "nav_sentiment":        "😊 Sentiment Analysis",
@@ -57,7 +54,6 @@ TRANSLATIONS = {
         "nav_analyze":          "🔬 Analyze Text",
         "nav_users":            "👤 Users",
         "logout":               "Logout",
-        # Login
         "sign_in":              "Sign In",
         "username":             "Username",
         "password":             "Password",
@@ -67,7 +63,6 @@ TRANSLATIONS = {
         "login_fail":           "Invalid username or password.",
         "role_mismatch":        "Role mismatch — your account role is",
         "demo_creds":           "Demo credentials",
-        # Dashboard
         "dashboard_title":      "📊 Dashboard — Overview",
         "total_records":        "📦 Total Records",
         "positive_sentiment":   "🟢 Positive Sentiment",
@@ -78,7 +73,7 @@ TRANSLATIONS = {
         "top_topics":           "📌 Top Societal Topics",
         "recent_records":       "🕒 Recent Records",
         "no_data_dashboard":    "No data yet. Go to Data Collection to get started.",
-        # Data Collection
+        "refresh":              "🔄 Refresh",
         "collection_title":     "🔍 Data Collection",
         "configuration":        "⚙️ Configuration",
         "keywords":             "Keywords",
@@ -99,7 +94,6 @@ TRANSLATIONS = {
         "no_records":           "No records yet. Run a collection above.",
         "access_denied":        "Access denied. Administrator role required.",
         "collecting_msg":       "Collecting record",
-        # Sentiment
         "sentiment_title":      "😊 Sentiment Analysis",
         "filters":              "🔎 Filters",
         "platform":             "Platform",
@@ -110,7 +104,6 @@ TRANSLATIONS = {
         "analyzed_records":     "📋 Analyzed Records",
         "download_csv":         "⬇️ Download CSV",
         "no_data_sentiment":    "No data. Run Data Collection first.",
-        # Topics
         "topics_title":         "📌 Topic Modeling",
         "identified_topics":    "🃏 Identified Topics",
         "topic_distribution":   "📊 Topic Distribution",
@@ -118,14 +111,12 @@ TRANSLATIONS = {
         "topic_trend":          "📈 Topic Prevalence Over Time",
         "no_data_topics":       "No data available.",
         "docs":                 "docs",
-        # Trends
         "trends_title":         "📈 Trend Analysis",
         "monthly_polarity":     "📉 Monthly Average Polarity Score",
         "by_platform":          "📡 Records by Platform",
         "language_dist":        "🌐 Language Distribution",
         "year_sentiment":       "🗓️ Year × Sentiment Heatmap",
         "no_data_trends":       "No data available.",
-        # Reports
         "reports_title":        "📄 Reports",
         "configure_report":     "⚙️ Configure Report",
         "report_title_lbl":     "Title",
@@ -141,7 +132,6 @@ TRANSLATIONS = {
         "saved_reports":        "📚 Saved Reports",
         "no_reports":           "No reports yet.",
         "fpdf_error":           "fpdf2 not installed — run: pip install fpdf2",
-        # Analyze Text
         "analyze_title":        "🔬 Analyze Text",
         "analyze_intro":        "Enter any text to instantly analyze its sentiment, language, and topic.",
         "text_label":           "Text",
@@ -159,7 +149,6 @@ TRANSLATIONS = {
         "cleaned_text":         "Cleaned text after preprocessing:",
         "saved_success":        "Result saved to database.",
         "enter_text":           "Please enter some text first.",
-        # Users
         "users_title":          "👤 User Management",
         "add_user":             "➕ Add New User",
         "new_username":         "Username",
@@ -170,17 +159,14 @@ TRANSLATIONS = {
         "user_exists":          "Username already exists.",
         "user_created":         "User created.",
         "user_required":        "Username and password are required.",
-        # Language names
         "lang_en":              "🇬🇧 English",
         "lang_fr":              "🇫🇷 French",
         "lang_other":           "Other",
     },
-
     "fr": {
         "app_title":            "CamNLP — Système d'Analyse Sociétale",
         "app_subtitle":         "Intelligence sur les Tendances Sociétales du Cameroun",
         "language_toggle":      "🌐 Langue",
-        # Navigation
         "nav_dashboard":        "📊 Tableau de bord",
         "nav_collection":       "🔍 Collecte de données",
         "nav_sentiment":        "😊 Analyse des sentiments",
@@ -190,7 +176,6 @@ TRANSLATIONS = {
         "nav_analyze":          "🔬 Analyser un texte",
         "nav_users":            "👤 Utilisateurs",
         "logout":               "Déconnexion",
-        # Login
         "sign_in":              "Connexion",
         "username":             "Nom d'utilisateur",
         "password":             "Mot de passe",
@@ -200,7 +185,6 @@ TRANSLATIONS = {
         "login_fail":           "Nom d'utilisateur ou mot de passe incorrect.",
         "role_mismatch":        "Rôle incorrect — votre rôle est",
         "demo_creds":           "Identifiants de démonstration",
-        # Dashboard
         "dashboard_title":      "📊 Tableau de bord — Vue d'ensemble",
         "total_records":        "📦 Total des enregistrements",
         "positive_sentiment":   "🟢 Sentiment positif",
@@ -211,7 +195,7 @@ TRANSLATIONS = {
         "top_topics":           "📌 Principaux sujets sociétaux",
         "recent_records":       "🕒 Enregistrements récents",
         "no_data_dashboard":    "Pas de données. Allez dans Collecte de données pour commencer.",
-        # Data Collection
+        "refresh":              "🔄 Actualiser",
         "collection_title":     "🔍 Collecte de données",
         "configuration":        "⚙️ Configuration",
         "keywords":             "Mots-clés",
@@ -232,7 +216,6 @@ TRANSLATIONS = {
         "no_records":           "Aucun enregistrement. Lancez une collecte ci-dessus.",
         "access_denied":        "Accès refusé. Rôle Administrateur requis.",
         "collecting_msg":       "Collecte de l'enregistrement",
-        # Sentiment
         "sentiment_title":      "😊 Analyse des sentiments",
         "filters":              "🔎 Filtres",
         "platform":             "Plateforme",
@@ -243,7 +226,6 @@ TRANSLATIONS = {
         "analyzed_records":     "📋 Enregistrements analysés",
         "download_csv":         "⬇️ Télécharger CSV",
         "no_data_sentiment":    "Pas de données. Lancez d'abord une collecte.",
-        # Topics
         "topics_title":         "📌 Modélisation des sujets",
         "identified_topics":    "🃏 Sujets identifiés",
         "topic_distribution":   "📊 Répartition des sujets",
@@ -251,14 +233,12 @@ TRANSLATIONS = {
         "topic_trend":          "📈 Évolution des sujets dans le temps",
         "no_data_topics":       "Aucune donnée disponible.",
         "docs":                 "docs",
-        # Trends
         "trends_title":         "📈 Analyse des tendances",
         "monthly_polarity":     "📉 Score de polarité mensuel moyen",
         "by_platform":          "📡 Enregistrements par plateforme",
         "language_dist":        "🌐 Répartition des langues",
         "year_sentiment":       "🗓️ Carte thermique Année x Sentiment",
         "no_data_trends":       "Aucune donnée disponible.",
-        # Reports
         "reports_title":        "📄 Rapports",
         "configure_report":     "⚙️ Configurer le rapport",
         "report_title_lbl":     "Titre",
@@ -274,7 +254,6 @@ TRANSLATIONS = {
         "saved_reports":        "📚 Rapports enregistrés",
         "no_reports":           "Aucun rapport pour l'instant.",
         "fpdf_error":           "fpdf2 non installé — exécutez : pip install fpdf2",
-        # Analyze Text
         "analyze_title":        "🔬 Analyser un texte",
         "analyze_intro":        "Entrez n'importe quel texte pour analyser instantanément son sentiment, sa langue et son sujet.",
         "text_label":           "Texte",
@@ -292,7 +271,6 @@ TRANSLATIONS = {
         "cleaned_text":         "Texte nettoyé après prétraitement :",
         "saved_success":        "Résultat enregistré dans la base de données.",
         "enter_text":           "Veuillez d'abord saisir du texte.",
-        # Users
         "users_title":          "👤 Gestion des utilisateurs",
         "add_user":             "➕ Ajouter un utilisateur",
         "new_username":         "Nom d'utilisateur",
@@ -303,7 +281,6 @@ TRANSLATIONS = {
         "user_exists":          "Ce nom d'utilisateur existe déjà.",
         "user_created":         "Utilisateur créé.",
         "user_required":        "Le nom d'utilisateur et le mot de passe sont requis.",
-        # Language names
         "lang_en":              "🇬🇧 Anglais",
         "lang_fr":              "🇫🇷 Français",
         "lang_other":           "Autre",
@@ -311,7 +288,6 @@ TRANSLATIONS = {
 }
 
 def t():
-    """Shortcut: returns translation dict for current language."""
     return TRANSLATIONS.get(st.session_state.get("lang", "en"), TRANSLATIONS["en"])
 
 
@@ -366,7 +342,7 @@ def logout():
 
 
 # ═════════════════════════════════════════════════════════════════════════════
-# DATA HELPERS
+# DATA HELPERS — no cache so dashboard always shows fresh data
 # ═════════════════════════════════════════════════════════════════════════════
 def load_all_records(limit=2000):
     session = get_session()
@@ -390,6 +366,7 @@ def load_all_records(limit=2000):
     df["Score"] = pd.to_numeric(df["Score"], errors="coerce").fillna(0)
     return df
 
+
 def load_topics():
     session = get_session()
     topics  = session.query(Topic).all()
@@ -397,6 +374,7 @@ def load_topics():
     return {tp.topic_id: {"name": tp.topic_name,
                            "keywords": tp.keywords,
                            "frequency": tp.frequency} for tp in topics}
+
 
 SENTIMENT_ICON = {"Positive": "🟢", "Negative": "🔴", "Neutral": "🟡"}
 TOPIC_COLORS   = ["#C00000","#D46B08","#2E75B6","#6f42c1","#217346"]
@@ -503,7 +481,6 @@ def page_login():
     _, col, _ = st.columns([1, 1.3, 1])
     with col:
         st.markdown("<br><br>", unsafe_allow_html=True)
-
         lang_choice = st.radio(
             "🌐", ["English", "Français"], horizontal=True,
             index=0 if lang == "en" else 1
@@ -523,9 +500,9 @@ def page_login():
 
         with st.form("login_form"):
             st.markdown(f"#### {tr['sign_in']}")
-            username = st.text_input(tr["username"], placeholder="e.g. admin")
-            password = st.text_input(tr["password"], type="password")
-            role_sel = st.selectbox(tr["role"], ["Administrator", "Analyst"])
+            username  = st.text_input(tr["username"], placeholder="e.g. admin")
+            password  = st.text_input(tr["password"], type="password")
+            role_sel  = st.selectbox(tr["role"], ["Administrator", "Analyst"])
             submitted = st.form_submit_button(tr["login_btn"], use_container_width=True)
 
         if submitted:
@@ -570,7 +547,8 @@ def sidebar_nav():
         st.markdown(f"""
         <div style='padding:14px;background:#1a3c5e;border-radius:8px;
                     margin-bottom:16px;text-align:center;'>
-            <div style='color:white;font-size:1.1rem;font-weight:700'>🇨🇲 CamNLP</div>
+            <div style='color:white;font-size:1.1rem;font-weight:700'>
+                🇨🇲 CamNLP</div>
             <div style='color:#8899aa;font-size:.75rem'>{tr["app_subtitle"]}</div>
         </div>
         """, unsafe_allow_html=True)
@@ -598,19 +576,22 @@ def sidebar_nav():
 
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE: DASHBOARD
+# ═════════════════════════════════════════════════════════════════════════════
 def page_dashboard():
     tr = t()
-    st.markdown(f"<div class='section-header'>{tr['dashboard_title']}</div>",
-                unsafe_allow_html=True)
 
-    if st.button("🔄 Refresh"):
-        st.rerun()
+    col_title, col_btn = st.columns([4, 1])
+    with col_title:
+        st.markdown(f"<div class='section-header'>{tr['dashboard_title']}</div>",
+                    unsafe_allow_html=True)
+    with col_btn:
+        if st.button(tr["refresh"], use_container_width=True):
+            st.rerun()
 
     df = load_all_records()
 
     if df.empty:
-        st.warning(tr["no_data_dashboard"])
-        return
+        st.warning(tr["no_data_dashboard"]); return
 
     total   = len(df)
     pos_pct = round(len(df[df.Sentiment=="Positive"]) / total * 100, 1)
@@ -622,6 +603,64 @@ def page_dashboard():
     c2.metric(tr["positive_sentiment"], f"{pos_pct}%")
     c3.metric(tr["negative_sentiment"], f"{neg_pct}%")
     c4.metric(tr["neutral_sentiment"],  f"{neu_pct}%")
+    st.markdown("---")
+
+    col_l, col_r = st.columns([1.6, 1])
+    with col_l:
+        st.markdown(f"**{tr['sentiment_trend']}**")
+        monthly = (df.dropna(subset=["Sentiment"])
+                     .groupby(["Month","Sentiment"]).size()
+                     .reset_index(name="Count"))
+        pivot = (monthly.pivot(index="Month", columns="Sentiment", values="Count")
+                        .fillna(0).reset_index().sort_values("Month"))
+        fig = go.Figure()
+        cmap = {"Positive":"#217346","Negative":"#C00000","Neutral":"#D46B08"}
+        for col in ["Positive","Negative","Neutral"]:
+            if col in pivot.columns:
+                fig.add_trace(go.Scatter(
+                    x=pivot["Month"], y=pivot[col], name=col,
+                    line=dict(color=cmap[col], width=2.5),
+                    mode="lines+markers", marker=dict(size=5)))
+        fig.update_layout(height=280, margin=dict(l=0,r=0,t=10,b=0),
+                          legend=dict(orientation="h",y=1.1),
+                          plot_bgcolor="white", paper_bgcolor="white")
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col_r:
+        st.markdown(f"**{tr['sentiment_dist']}**")
+        donut = go.Figure(go.Pie(
+            labels=["Positive","Negative","Neutral"],
+            values=[pos_pct, neg_pct, neu_pct], hole=0.55,
+            marker_colors=["#217346","#C00000","#D46B08"],
+            textinfo="label+percent"))
+        donut.update_layout(height=280, margin=dict(l=0,r=0,t=10,b=0),
+                            showlegend=False, paper_bgcolor="white")
+        st.plotly_chart(donut, use_container_width=True)
+
+    st.markdown("---")
+    col_b, col_c = st.columns([1.6, 1])
+    with col_b:
+        st.markdown(f"**{tr['top_topics']}**")
+        tc = df["Topic"].value_counts().dropna().head(6).reset_index()
+        tc.columns = ["Topic","Count"]
+        fig2 = px.bar(tc, x="Count", y="Topic", orientation="h",
+                      color="Count", color_continuous_scale="Blues")
+        fig2.update_layout(height=270, showlegend=False,
+                           coloraxis_showscale=False,
+                           plot_bgcolor="white", paper_bgcolor="white",
+                           margin=dict(l=0,r=0,t=10,b=0))
+        st.plotly_chart(fig2, use_container_width=True)
+
+    with col_c:
+        st.markdown(f"**{tr['recent_records']}**")
+        for _, row in df.sort_values("Date", ascending=False).head(6).iterrows():
+            icon = SENTIMENT_ICON.get(row["Sentiment"],"⚪")
+            st.markdown(
+                f"**{row['Platform']}** {icon} {row['Sentiment']}<br>"
+                f"<small>{str(row['Date'])[:16]} · "
+                f"{str(row.get('Language','')).upper()}</small>",
+                unsafe_allow_html=True)
+            st.markdown("---")
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -629,58 +668,74 @@ def page_dashboard():
 # ═════════════════════════════════════════════════════════════════════════════
 def page_data_collection():
     tr = t()
-
     if current_role() != "Administrator":
-        st.error(tr["access_denied"])
-        return
+        st.error(tr["access_denied"]); return
 
     st.markdown(f"<div class='section-header'>{tr['collection_title']}</div>",
                 unsafe_allow_html=True)
 
     col_cfg, col_stat = st.columns([1, 1.2])
-
     with col_cfg:
+        st.markdown(f"#### {tr['configuration']}")
         with st.form("col_form"):
-            keyword     = st.text_input(tr["keywords"], value="#Cameroon")
-            platform    = st.selectbox(tr["source"], [tr["all"], "Twitter", "Facebook"])
-            language    = st.selectbox(tr["language_label"], [tr["all"], "English", "French"])
+            keyword     = st.text_input(tr["keywords"],
+                                        value="#Cameroon, Anglophone, COVID")
+            platform    = st.selectbox(tr["source"],
+                            [tr["all"],"Twitter","Facebook","CamTimes",
+                             "237online","BBC Africa","Cameroon Tribune"])
+            language    = st.selectbox(tr["language_label"],
+                            [tr["all"],"English","French"])
+            d1, d2      = st.columns(2)
+            start_date  = d1.date_input(tr["date_from"], datetime(2020,1,1))
+            end_date    = d2.date_input(tr["date_to"],   datetime.today())
             max_records = st.slider(tr["max_records"], 10, 200, 50)
-
-            run_btn = st.form_submit_button(tr["start_collection"])
+            run_btn     = st.form_submit_button(tr["start_collection"],
+                                                use_container_width=True)
 
     with col_stat:
+        st.markdown(f"#### {tr['progress_title']}")
         pb  = st.progress(0)
         log = st.empty()
 
         if run_btn:
             log_lines = []
-
             def cb(current, total, msg):
-                pb.progress(min(current / max(total, 1), 1.0))
-                log_lines.append(msg)
-                log.text("\n".join(log_lines[-5:]))
+                pb.progress(min(current / max(total,1), 1.0))
+                log_lines.append(
+                    f"[{datetime.utcnow().strftime('%H:%M:%S')}] {msg}")
+                log.code("\n".join(log_lines[-8:]))
 
             with st.spinner(tr["collecting"]):
+                plat_val = None if platform == tr["all"] else platform
+                lang_val = None if language == tr["all"] else language
                 result = run_collection(
-                    keyword=keyword,
-                    platform=None if platform == tr["all"] else platform,
-                    language=None if language == tr["all"] else language,
-                    max_records=max_records,
-                    progress_callback=cb,
+                    keyword=keyword, platform=plat_val, language=lang_val,
+                    start_date=datetime.combine(start_date, datetime.min.time()),
+                    end_date=datetime.combine(end_date,     datetime.max.time()),
+                    max_records=max_records, progress_callback=cb,
                 )
-
             pb.progress(1.0)
             st.success(tr["collection_complete"])
-
-            
-            hm1, m2, m3, m4 = st.columns(4)
+            m1, m2, m3, m4 = st.columns(4)
             m1.metric(tr["collected"],  result["collected"])
             m2.metric(tr["saved"],      result["saved"])
             m3.metric(tr["duplicates"], result["duplicates"])
             m4.metric(tr["filtered"],   result["filtered"])
+            time.sleep(2)
+            st.rerun()  # ← auto refresh entire app with new data
 
-            time.sleep(1)
-            st.rerun()
+    st.markdown("---")
+    st.markdown(f"#### {tr['recent_records_tbl']}")
+    df = load_all_records()
+    if not df.empty:
+        st.dataframe(
+            df.sort_values("Date", ascending=False)
+              .head(20)[["ID","Platform","Language","Date","Sentiment","Topic"]],
+            use_container_width=True, height=320)
+    else:
+        st.info(tr["no_records"])
+
+
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE: SENTIMENT ANALYSIS
 # ═════════════════════════════════════════════════════════════════════════════
@@ -719,8 +774,11 @@ def page_sentiment():
     with c1:
         st.markdown(f"**{tr['annual_sentiment']}**")
         yearly = fdf.groupby(["Year","Sentiment"]).size().reset_index(name="Count")
-        fig = px.bar(yearly, x="Year", y="Count", color="Sentiment", barmode="group",
-                     color_discrete_map={"Positive":"#217346","Negative":"#C00000","Neutral":"#D46B08"})
+        fig = px.bar(yearly, x="Year", y="Count", color="Sentiment",
+                     barmode="group",
+                     color_discrete_map={"Positive":"#217346",
+                                         "Negative":"#C00000",
+                                         "Neutral":"#D46B08"})
         fig.update_layout(height=280, margin=dict(l=0,r=0,t=10,b=0),
                           plot_bgcolor="white", paper_bgcolor="white")
         st.plotly_chart(fig, use_container_width=True)
@@ -741,10 +799,12 @@ def page_sentiment():
     display["Date"]  = display["Date"].dt.strftime("%Y-%m-%d")
     display["Score"] = display["Score"].round(3)
     display["Text"]  = display["Text"].str[:80] + "…"
-    display = display[["ID","Date","Platform","Language","Text","Sentiment","Score","Topic"]]
+    display = display[["ID","Date","Platform","Language",
+                        "Text","Sentiment","Score","Topic"]]
 
     def highlight_sent(val):
-        c = {"Positive":"#d4edda","Negative":"#f8d7da","Neutral":"#fff3cd"}.get(val,"")
+        c = {"Positive":"#d4edda","Negative":"#f8d7da",
+             "Neutral":"#fff3cd"}.get(val,"")
         return f"background-color:{c}"
 
     st.dataframe(display.style.map(highlight_sent, subset=["Sentiment"]),
@@ -772,17 +832,20 @@ def page_topics():
         col = TOPIC_COLORS[i % len(TOPIC_COLORS)]
         with cols[i]:
             kw_html = "".join(
-                f'<span style="background:{col}22;color:{col};border:1px solid {col};'
-                f'border-radius:10px;padding:1px 6px;font-size:.7rem;'
-                f'margin:2px;display:inline-block">{k}</span>'
+                f'<span style="background:{col}22;color:{col};'
+                f'border:1px solid {col};border-radius:10px;'
+                f'padding:1px 6px;font-size:.7rem;margin:2px;'
+                f'display:inline-block">{k}</span>'
                 for k in kws)
             st.markdown(f"""
-            <div style='border:2px solid {col};border-radius:8px;padding:10px;min-height:160px'>
+            <div style='border:2px solid {col};border-radius:8px;
+                        padding:10px;min-height:160px'>
                 <div style='background:{col};color:white;border-radius:4px;
                     padding:3px 8px;font-weight:700;font-size:.82rem;
                     text-align:center;margin-bottom:6px'>Topic {i+1}</div>
                 <b style='color:{col}'>{top["name"]}</b><br>
-                <small style='color:#666'>{top["frequency"]:,} {tr["docs"]}</small><br><br>
+                <small style='color:#666'>
+                    {top["frequency"]:,} {tr["docs"]}</small><br><br>
                 {kw_html}
             </div>
             """, unsafe_allow_html=True)
@@ -808,7 +871,8 @@ def page_topics():
                               values="Count").fillna(0)
             pct = piv.div(piv.sum(axis=1), axis=0).round(3) * 100
             fig2 = px.imshow(pct, text_auto=".0f",
-                             color_continuous_scale="RdYlGn", zmin=0, zmax=100)
+                             color_continuous_scale="RdYlGn",
+                             zmin=0, zmax=100)
             fig2.update_layout(height=300, margin=dict(l=0,r=0,t=10,b=0),
                                paper_bgcolor="white")
             st.plotly_chart(fig2, use_container_width=True)
@@ -902,13 +966,13 @@ def page_reports():
     with c_form:
         st.markdown(f"#### {tr['configure_report']}")
         with st.form("rep_form"):
-            r_title = st.text_input(tr["report_title_lbl"],
-                                    "Cameroon Societal Trends Q1 2025")
-            r_type  = st.selectbox(tr["report_type"],
-                        ["Full Analysis","Sentiment Analysis","Topic Modeling"])
-            r_plat  = st.selectbox(tr["report_platform"],
-                        [tr["all"],"Twitter","Facebook",
-                         "CamTimes","237online","BBC Africa"])
+            r_title  = st.text_input(tr["report_title_lbl"],
+                                     "Cameroon Societal Trends Q1 2025")
+            r_type   = st.selectbox(tr["report_type"],
+                         ["Full Analysis","Sentiment Analysis","Topic Modeling"])
+            r_plat   = st.selectbox(tr["report_platform"],
+                         [tr["all"],"Twitter","Facebook",
+                          "CamTimes","237online","BBC Africa"])
             rd1, rd2 = st.columns(2)
             r_from   = rd1.date_input(tr["date_from"], datetime(2020,1,1))
             r_to     = rd2.date_input(tr["date_to"],   datetime.today())
@@ -919,15 +983,16 @@ def page_reports():
     with c_prev:
         st.markdown(f"#### {tr['report_preview']}")
         total = len(df)
-        pp  = round(len(df[df.Sentiment=="Positive"]) / max(total,1) * 100, 1)
-        np_ = round(len(df[df.Sentiment=="Negative"]) / max(total,1) * 100, 1)
-        nu  = round(100 - pp - np_, 1)
-        topic_counts = df["Topic"].value_counts()
-        tt  = topic_counts.index[0] if not topic_counts.empty else "N/A"
+        pp    = round(len(df[df.Sentiment=="Positive"]) / max(total,1) * 100, 1)
+        np_   = round(len(df[df.Sentiment=="Negative"]) / max(total,1) * 100, 1)
+        nu    = round(100 - pp - np_, 1)
+        tc    = df["Topic"].value_counts()
+        tt    = tc.index[0] if not tc.empty else "N/A"
         st.markdown(f"""
         <div style='border:1px solid #dee2e6;border-radius:8px;
                     padding:16px;background:white;'>
-            <h4 style='color:#1F4E79;text-align:center'>CAMEROON NLP ANALYSIS</h4>
+            <h4 style='color:#1F4E79;text-align:center'>
+                CAMEROON NLP ANALYSIS</h4>
             <hr/>
             {tr["total_records_lbl"]}: <b>{total:,}</b><br>
             {tr["dominant_topic"]}: <b>{tt}</b><br>
@@ -943,8 +1008,8 @@ def page_reports():
         pp2  = round(len(rdf[rdf.Sentiment=="Positive"]) / max(tot,1)*100,1)
         np2  = round(len(rdf[rdf.Sentiment=="Negative"]) / max(tot,1)*100,1)
         nu2  = round(100-pp2-np2,1)
-        topic_counts2 = rdf["Topic"].value_counts()
-        tt2  = topic_counts2.index[0] if not topic_counts2.empty else "N/A"
+        tc2  = rdf["Topic"].value_counts()
+        tt2  = tc2.index[0] if not tc2.empty else "N/A"
 
         if r_fmt == "PDF":
             stats   = {"total":tot,"positive_pct":pp2,"negative_pct":np2,
@@ -952,7 +1017,8 @@ def page_reports():
                        "date_range":f"{r_from} to {r_to}"}
             records = [{"date":str(r["Date"])[:10],"platform":r["Platform"],
                         "language":r["Language"],"text":str(r["Text"])[:60],
-                        "sentiment":r["Sentiment"],"score":round(float(r["Score"]),3),
+                        "sentiment":r["Sentiment"],
+                        "score":round(float(r["Score"]),3),
                         "topic":r["Topic"]}
                        for _, r in rdf.head(30).iterrows()]
             pdf_bytes = generate_pdf_report(r_title, stats, records)
@@ -984,8 +1050,8 @@ def page_reports():
     session.close()
     if saved:
         st.dataframe(pd.DataFrame([{
-            "Title":   r.title,   "Notes":   r.content,
-            "Format":  r.format,  "Created": str(r.created_at)[:16]
+            "Title":   r.title,  "Notes":   r.content,
+            "Format":  r.format, "Created": str(r.created_at)[:16]
         } for r in saved]), use_container_width=True)
     else:
         st.info(tr["no_reports"])
@@ -1011,14 +1077,16 @@ def page_analyze_text():
         st.markdown("---")
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(tr["language_result"],
-                  {"en": tr["lang_en"], "fr": tr["lang_fr"]}.get(res["language"],"?"))
+                  {"en": tr["lang_en"], "fr": tr["lang_fr"]}.get(
+                      res["language"],"?"))
         c2.metric(tr["sentiment_result"], res["sentiment_label"])
         c3.metric(tr["polarity_result"],  f"{res['polarity_score']:+.3f}")
         c4.metric(tr["topic_result"],     res["topic_name"])
 
         score = res["polarity_score"]
         pct   = int((score + 1) / 2 * 100)
-        color = "#217346" if score > 0.1 else ("#C00000" if score < -0.1 else "#D46B08")
+        color = ("#217346" if score > 0.1
+                 else "#C00000" if score < -0.1 else "#D46B08")
         st.markdown(f"""
         <div style='margin:12px 0 4px;font-weight:600;color:#444'>
             {tr["polarity_label"]}</div>
@@ -1049,7 +1117,6 @@ def page_analyze_text():
                                 topic_id=res["topic_id"],
                                 analysis_date=datetime.utcnow())
             session.add(ar); session.commit(); session.close()
-            load_all_records.clear()
             st.success(tr["saved_success"])
     elif run:
         st.warning(tr["enter_text"])
