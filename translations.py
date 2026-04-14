@@ -1,0 +1,297 @@
+# translations.py
+
+T = {
+    "en": {
+        # ── App ───────────────────────────────────────────
+        "app_title":        "CamNLP — Societal Analysis System",
+        "app_subtitle":     "Cameroon Societal Trend Intelligence",
+        "language_toggle":  "🌐 Language",
+
+        # ── Navigation ────────────────────────────────────
+        "nav_dashboard":    "📊 Dashboard",
+        "nav_collection":   "🔍 Data Collection",
+        "nav_sentiment":    "😊 Sentiment Analysis",
+        "nav_topics":       "📌 Topic Modeling",
+        "nav_trends":       "📈 Trend Analysis",
+        "nav_reports":      "📄 Reports",
+        "nav_analyze":      "🔬 Analyze Text",
+        "nav_users":        "👤 Users",
+        "logout":           "Logout",
+
+        # ── Login ─────────────────────────────────────────
+        "sign_in":          "Sign In",
+        "username":         "Username",
+        "password":         "Password",
+        "role":             "Role",
+        "login_btn":        "🔐 Login",
+        "login_success":    "Login successful! Loading dashboard…",
+        "login_fail":       "Invalid username or password.",
+        "role_mismatch":    "Role mismatch — your account role is",
+        "demo_creds":       "Demo credentials",
+
+        # ── Dashboard ─────────────────────────────────────
+        "dashboard_title":      "📊 Dashboard — Overview",
+        "total_records":        "📦 Total Records",
+        "positive_sentiment":   "🟢 Positive Sentiment",
+        "negative_sentiment":   "🔴 Negative Sentiment",
+        "neutral_sentiment":    "🟡 Neutral Sentiment",
+        "sentiment_trend":      "📈 Sentiment Trend Over Time",
+        "sentiment_dist":       "🍩 Sentiment Distribution",
+        "top_topics":           "📌 Top Societal Topics",
+        "recent_records":       "🕒 Recent Records",
+        "no_data_dashboard":    "No data yet. Go to Data Collection to get started.",
+
+        # ── Data Collection ───────────────────────────────
+        "collection_title":     "🔍 Data Collection",
+        "configuration":        "⚙️ Configuration",
+        "keywords":             "Keywords",
+        "source":               "Source",
+        "language_label":       "Language",
+        "date_from":            "From",
+        "date_to":              "To",
+        "max_records":          "Max Records",
+        "start_collection":     "▶ Start Collection",
+        "progress_title":       "📡 Progress",
+        "collecting":           "Collecting…",
+        "collection_complete":  "✅ Collection complete!",
+        "collected":            "Collected",
+        "saved":                "Saved",
+        "duplicates":           "Duplicates",
+        "filtered":             "Filtered",
+        "recent_records_tbl":   "📋 Recent Records",
+        "no_records":           "No records yet. Run a collection above.",
+        "access_denied":        "Access denied. Administrator role required.",
+        "collecting_msg":       "Collecting record",
+
+        # ── Sentiment Analysis ────────────────────────────
+        "sentiment_title":      "😊 Sentiment Analysis",
+        "filters":              "🔎 Filters",
+        "platform":             "Platform",
+        "all":                  "All",
+        "records_match":        "records match current filters.",
+        "annual_sentiment":     "Annual Sentiment Distribution",
+        "polarity_dist":        "Polarity Score Distribution",
+        "analyzed_records":     "📋 Analyzed Records",
+        "download_csv":         "⬇️ Download CSV",
+        "no_data_sentiment":    "No data. Run Data Collection first.",
+
+        # ── Topic Modeling ────────────────────────────────
+        "topics_title":         "📌 Topic Modeling",
+        "identified_topics":    "🃏 Identified Topics",
+        "topic_distribution":   "📊 Topic Distribution",
+        "topic_heatmap":        "🔥 Topic × Sentiment Heatmap",
+        "topic_trend":          "📈 Topic Prevalence Over Time",
+        "no_data_topics":       "No data available.",
+        "docs":                 "docs",
+
+        # ── Trend Analysis ────────────────────────────────
+        "trends_title":         "📈 Trend Analysis",
+        "monthly_polarity":     "📉 Monthly Average Polarity Score",
+        "by_platform":          "📡 Records by Platform",
+        "language_dist":        "🌐 Language Distribution",
+        "year_sentiment":       "🗓️ Year × Sentiment Heatmap",
+        "no_data_trends":       "No data available.",
+
+        # ── Reports ───────────────────────────────────────
+        "reports_title":        "📄 Reports",
+        "configure_report":     "⚙️ Configure Report",
+        "report_title_lbl":     "Title",
+        "report_type":          "Type",
+        "report_platform":      "Platform",
+        "report_format":        "Format",
+        "generate_btn":         "📄 Generate",
+        "report_preview":       "👁️ Preview",
+        "total_records_lbl":    "Total records",
+        "dominant_topic":       "Dominant topic",
+        "report_success":       "✅ Report generated!",
+        "download_pdf":         "⬇️ Download PDF",
+        "saved_reports":        "📚 Saved Reports",
+        "no_reports":           "No reports yet.",
+        "fpdf_error":           "fpdf2 not installed — run: pip install fpdf2",
+
+        # ── Analyze Text ──────────────────────────────────
+        "analyze_title":        "🔬 Analyze Text",
+        "analyze_intro":        "Enter any text to instantly analyze its sentiment, language, and topic.",
+        "text_label":           "Text",
+        "text_placeholder":     "Type or paste English / French text here…",
+        "analyze_btn":          "🔍 Analyze",
+        "save_db":              "Save to database",
+        "language_result":      "Language",
+        "sentiment_result":     "Sentiment",
+        "polarity_result":      "Polarity",
+        "topic_result":         "Topic",
+        "polarity_label":       "Polarity Score",
+        "very_negative":        "-1.0 Very Negative",
+        "neutral_label":        "0 Neutral",
+        "very_positive":        "+1.0 Very Positive",
+        "cleaned_text":         "Cleaned text after preprocessing:",
+        "saved_success":        "Result saved to database.",
+        "enter_text":           "Please enter some text first.",
+
+        # ── Users ─────────────────────────────────────────
+        "users_title":          "👤 User Management",
+        "add_user":             "➕ Add New User",
+        "new_username":         "Username",
+        "new_password":         "Password",
+        "new_role":             "Role",
+        "new_email":            "Email",
+        "add_user_btn":         "Add User",
+        "user_exists":          "Username already exists.",
+        "user_created":         "User created.",
+        "user_required":        "Username and password are required.",
+
+        # ── Languages ─────────────────────────────────────
+        "lang_en":              "🇬🇧 English",
+        "lang_fr":              "🇫🇷 French",
+        "lang_other":           "Other",
+    },
+
+    "fr": {
+        # ── App ───────────────────────────────────────────
+        "app_title":        "CamNLP — Système d'Analyse Sociétale",
+        "app_subtitle":     "Intelligence sur les Tendances Sociétales du Cameroun",
+        "language_toggle":  "🌐 Langue",
+
+        # ── Navigation ────────────────────────────────────
+        "nav_dashboard":    "📊 Tableau de bord",
+        "nav_collection":   "🔍 Collecte de données",
+        "nav_sentiment":    "😊 Analyse des sentiments",
+        "nav_topics":       "📌 Modélisation des sujets",
+        "nav_trends":       "📈 Analyse des tendances",
+        "nav_reports":      "📄 Rapports",
+        "nav_analyze":      "🔬 Analyser un texte",
+        "nav_users":        "👤 Utilisateurs",
+        "logout":           "Déconnexion",
+
+        # ── Login ─────────────────────────────────────────
+        "sign_in":          "Connexion",
+        "username":         "Nom d'utilisateur",
+        "password":         "Mot de passe",
+        "role":             "Rôle",
+        "login_btn":        "🔐 Se connecter",
+        "login_success":    "Connexion réussie ! Chargement du tableau de bord…",
+        "login_fail":       "Nom d'utilisateur ou mot de passe incorrect.",
+        "role_mismatch":    "Rôle incorrect — votre rôle est",
+        "demo_creds":       "Identifiants de démonstration",
+
+        # ── Dashboard ─────────────────────────────────────
+        "dashboard_title":      "📊 Tableau de bord — Vue d'ensemble",
+        "total_records":        "📦 Total des enregistrements",
+        "positive_sentiment":   "🟢 Sentiment positif",
+        "negative_sentiment":   "🔴 Sentiment négatif",
+        "neutral_sentiment":    "🟡 Sentiment neutre",
+        "sentiment_trend":      "📈 Évolution du sentiment dans le temps",
+        "sentiment_dist":       "🍩 Répartition des sentiments",
+        "top_topics":           "📌 Principaux sujets sociétaux",
+        "recent_records":       "🕒 Enregistrements récents",
+        "no_data_dashboard":    "Pas de données. Allez dans Collecte de données pour commencer.",
+
+        # ── Data Collection ───────────────────────────────
+        "collection_title":     "🔍 Collecte de données",
+        "configuration":        "⚙️ Configuration",
+        "keywords":             "Mots-clés",
+        "source":               "Source",
+        "language_label":       "Langue",
+        "date_from":            "Du",
+        "date_to":              "Au",
+        "max_records":          "Nombre max d'enregistrements",
+        "start_collection":     "▶ Lancer la collecte",
+        "progress_title":       "📡 Progression",
+        "collecting":           "Collecte en cours…",
+        "collection_complete":  "✅ Collecte terminée !",
+        "collected":            "Collectés",
+        "saved":                "Enregistrés",
+        "duplicates":           "Doublons",
+        "filtered":             "Filtrés",
+        "recent_records_tbl":   "📋 Enregistrements récents",
+        "no_records":           "Aucun enregistrement. Lancez une collecte ci-dessus.",
+        "access_denied":        "Accès refusé. Rôle Administrateur requis.",
+        "collecting_msg":       "Collecte de l'enregistrement",
+
+        # ── Sentiment Analysis ────────────────────────────
+        "sentiment_title":      "😊 Analyse des sentiments",
+        "filters":              "🔎 Filtres",
+        "platform":             "Plateforme",
+        "all":                  "Tous",
+        "records_match":        "enregistrements correspondent aux filtres.",
+        "annual_sentiment":     "Répartition annuelle des sentiments",
+        "polarity_dist":        "Distribution du score de polarité",
+        "analyzed_records":     "📋 Enregistrements analysés",
+        "download_csv":         "⬇️ Télécharger CSV",
+        "no_data_sentiment":    "Pas de données. Lancez d'abord une collecte.",
+
+        # ── Topic Modeling ────────────────────────────────
+        "topics_title":         "📌 Modélisation des sujets",
+        "identified_topics":    "🃏 Sujets identifiés",
+        "topic_distribution":   "📊 Répartition des sujets",
+        "topic_heatmap":        "🔥 Carte thermique Sujet × Sentiment",
+        "topic_trend":          "📈 Évolution des sujets dans le temps",
+        "no_data_topics":       "Aucune donnée disponible.",
+        "docs":                 "docs",
+
+        # ── Trend Analysis ────────────────────────────────
+        "trends_title":         "📈 Analyse des tendances",
+        "monthly_polarity":     "📉 Score de polarité mensuel moyen",
+        "by_platform":          "📡 Enregistrements par plateforme",
+        "language_dist":        "🌐 Répartition des langues",
+        "year_sentiment":       "🗓️ Carte thermique Année × Sentiment",
+        "no_data_trends":       "Aucune donnée disponible.",
+
+        # ── Reports ───────────────────────────────────────
+        "reports_title":        "📄 Rapports",
+        "configure_report":     "⚙️ Configurer le rapport",
+        "report_title_lbl":     "Titre",
+        "report_type":          "Type",
+        "report_platform":      "Plateforme",
+        "report_format":        "Format",
+        "generate_btn":         "📄 Générer",
+        "report_preview":       "👁️ Aperçu",
+        "total_records_lbl":    "Total des enregistrements",
+        "dominant_topic":       "Sujet dominant",
+        "report_success":       "✅ Rapport généré !",
+        "download_pdf":         "⬇️ Télécharger PDF",
+        "saved_reports":        "📚 Rapports enregistrés",
+        "no_reports":           "Aucun rapport pour l'instant.",
+        "fpdf_error":           "fpdf2 non installé — exécutez : pip install fpdf2",
+
+        # ── Analyze Text ──────────────────────────────────
+        "analyze_title":        "🔬 Analyser un texte",
+        "analyze_intro":        "Entrez n'importe quel texte pour analyser instantanément son sentiment, sa langue et son sujet.",
+        "text_label":           "Texte",
+        "text_placeholder":     "Tapez ou collez du texte en anglais ou en français ici…",
+        "analyze_btn":          "🔍 Analyser",
+        "save_db":              "Enregistrer dans la base de données",
+        "language_result":      "Langue",
+        "sentiment_result":     "Sentiment",
+        "polarity_result":      "Polarité",
+        "topic_result":         "Sujet",
+        "polarity_label":       "Score de polarité",
+        "very_negative":        "-1.0 Très négatif",
+        "neutral_label":        "0 Neutre",
+        "very_positive":        "+1.0 Très positif",
+        "cleaned_text":         "Texte nettoyé après prétraitement :",
+        "saved_success":        "Résultat enregistré dans la base de données.",
+        "enter_text":           "Veuillez d'abord saisir du texte.",
+
+        # ── Users ─────────────────────────────────────────
+        "users_title":          "👤 Gestion des utilisateurs",
+        "add_user":             "➕ Ajouter un utilisateur",
+        "new_username":         "Nom d'utilisateur",
+        "new_password":         "Mot de passe",
+        "new_role":             "Rôle",
+        "new_email":            "E-mail",
+        "add_user_btn":         "Ajouter l'utilisateur",
+        "user_exists":          "Ce nom d'utilisateur existe déjà.",
+        "user_created":         "Utilisateur créé.",
+        "user_required":        "Le nom d'utilisateur et le mot de passe sont requis.",
+
+        # ── Languages ─────────────────────────────────────
+        "lang_en":              "🇬🇧 Anglais",
+        "lang_fr":              "🇫🇷 Français",
+        "lang_other":           "Autre",
+    }
+}
+
+def get_translation(lang="en"):
+    """Returns the translation dictionary for the given language."""
+    return T.get(lang, T["en"])

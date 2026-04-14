@@ -598,26 +598,19 @@ def sidebar_nav():
 
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE: DASHBOARD
-# ══════════════
-def page_dashboard():
-    tr = t()
-    col_title, col_btn = st.columns([4, 1])
-    with col_title:
-        st.markdown(f"<div class='section-header'>{tr['dashboard_title']}</div>",
-                    unsafe_allow_html=True)
-    with col_btn:
-        if st.button("🔄 Refresh", use_container_width=True):
-            st.rerun()  # ← manual refresh button
-
-    df = load_all_records()  # now always fetches fresh from DB═══════════════════════════════════════════════════════════════
 def page_dashboard():
     tr = t()
     st.markdown(f"<div class='section-header'>{tr['dashboard_title']}</div>",
                 unsafe_allow_html=True)
+
+    if st.button("🔄 Refresh"):
+        st.rerun()
+
     df = load_all_records()
 
     if df.empty:
-        st.warning(tr["no_data_dashboard"]); return
+        st.warning(tr["no_data_dashboard"])
+        return
 
     total   = len(df)
     pos_pct = round(len(df[df.Sentiment=="Positive"]) / total * 100, 1)
@@ -629,62 +622,6 @@ def page_dashboard():
     c2.metric(tr["positive_sentiment"], f"{pos_pct}%")
     c3.metric(tr["negative_sentiment"], f"{neg_pct}%")
     c4.metric(tr["neutral_sentiment"],  f"{neu_pct}%")
-    st.markdown("---")
-
-    col_l, col_r = st.columns([1.6, 1])
-    with col_l:
-        st.markdown(f"**{tr['sentiment_trend']}**")
-        monthly = (df.dropna(subset=["Sentiment"])
-                     .groupby(["Month","Sentiment"]).size()
-                     .reset_index(name="Count"))
-        pivot = (monthly.pivot(index="Month", columns="Sentiment", values="Count")
-                        .fillna(0).reset_index().sort_values("Month"))
-        fig = go.Figure()
-        cmap = {"Positive":"#217346","Negative":"#C00000","Neutral":"#D46B08"}
-        for col in ["Positive","Negative","Neutral"]:
-            if col in pivot.columns:
-                fig.add_trace(go.Scatter(x=pivot["Month"], y=pivot[col], name=col,
-                    line=dict(color=cmap[col], width=2.5),
-                    mode="lines+markers", marker=dict(size=5)))
-        fig.update_layout(height=280, margin=dict(l=0,r=0,t=10,b=0),
-                          legend=dict(orientation="h",y=1.1),
-                          plot_bgcolor="white", paper_bgcolor="white")
-        st.plotly_chart(fig, use_container_width=True)
-
-    with col_r:
-        st.markdown(f"**{tr['sentiment_dist']}**")
-        donut = go.Figure(go.Pie(
-            labels=["Positive","Negative","Neutral"],
-            values=[pos_pct, neg_pct, neu_pct], hole=0.55,
-            marker_colors=["#217346","#C00000","#D46B08"],
-            textinfo="label+percent"))
-        donut.update_layout(height=280, margin=dict(l=0,r=0,t=10,b=0),
-                            showlegend=False, paper_bgcolor="white")
-        st.plotly_chart(donut, use_container_width=True)
-
-    st.markdown("---")
-    col_b, col_c = st.columns([1.6, 1])
-    with col_b:
-        st.markdown(f"**{tr['top_topics']}**")
-        tc = df["Topic"].value_counts().dropna().head(6).reset_index()
-        tc.columns = ["Topic","Count"]
-        fig2 = px.bar(tc, x="Count", y="Topic", orientation="h",
-                      color="Count", color_continuous_scale="Blues")
-        fig2.update_layout(height=270, showlegend=False,
-                           coloraxis_showscale=False,
-                           plot_bgcolor="white", paper_bgcolor="white",
-                           margin=dict(l=0,r=0,t=10,b=0))
-        st.plotly_chart(fig2, use_container_width=True)
-
-    with col_c:
-        st.markdown(f"**{tr['recent_records']}**")
-        for _, row in df.sort_values("Date", ascending=False).head(6).iterrows():
-            icon = SENTIMENT_ICON.get(row["Sentiment"],"⚪")
-            st.markdown(
-                f"**{row['Platform']}** {icon} {row['Sentiment']}<br>"
-                f"<small>{str(row['Date'])[:16]} · {str(row.get('Language','')).upper()}</small>",
-                unsafe_allow_html=True)
-            st.markdown("---")
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -692,83 +629,58 @@ def page_dashboard():
 # ═════════════════════════════════════════════════════════════════════════════
 def page_data_collection():
     tr = t()
+
     if current_role() != "Administrator":
-        st.error(tr["access_denied"]); return
+        st.error(tr["access_denied"])
+        return
 
     st.markdown(f"<div class='section-header'>{tr['collection_title']}</div>",
                 unsafe_allow_html=True)
 
     col_cfg, col_stat = st.columns([1, 1.2])
+
     with col_cfg:
-        st.markdown(f"#### {tr['configuration']}")
         with st.form("col_form"):
-            keyword     = st.text_input(tr["keywords"], value="#Cameroon, Anglophone, COVID")
-            platform    = st.selectbox(tr["source"],
-                            [tr["all"],"Twitter","Facebook","CamTimes",
-                             "237online","BBC Africa","Cameroon Tribune"])
-            language    = st.selectbox(tr["language_label"],
-                            [tr["all"],"English","French"])
-            d1, d2      = st.columns(2)
-            start_date  = d1.date_input(tr["date_from"], datetime(2020,1,1))
-            end_date    = d2.date_input(tr["date_to"],   datetime.today())
+            keyword     = st.text_input(tr["keywords"], value="#Cameroon")
+            platform    = st.selectbox(tr["source"], [tr["all"], "Twitter", "Facebook"])
+            language    = st.selectbox(tr["language_label"], [tr["all"], "English", "French"])
             max_records = st.slider(tr["max_records"], 10, 200, 50)
-            run_btn     = st.form_submit_button(tr["start_collection"],
-                                                use_container_width=True)
+
+            run_btn = st.form_submit_button(tr["start_collection"])
 
     with col_stat:
-        st.markdown(f"#### {tr['progress_title']}")
         pb  = st.progress(0)
         log = st.empty()
 
         if run_btn:
             log_lines = []
+
             def cb(current, total, msg):
-                pb.progress(min(current / max(total,1), 1.0))
-                log_lines.append(f"[{datetime.utcnow().strftime('%H:%M:%S')}] {msg}")
-                log.code("\n".join(log_lines[-8:]))
+                pb.progress(min(current / max(total, 1), 1.0))
+                log_lines.append(msg)
+                log.text("\n".join(log_lines[-5:]))
 
             with st.spinner(tr["collecting"]):
-                plat_val = None if platform == tr["all"] else platform
-                lang_val = None if language == tr["all"] else language
                 result = run_collection(
-                    keyword=keyword, platform=plat_val, language=lang_val,
-                    start_date=datetime.combine(start_date, datetime.min.time()),
-                    end_date=datetime.combine(end_date,     datetime.max.time()),
-                    max_records=max_records, progress_callback=cb,
+                    keyword=keyword,
+                    platform=None if platform == tr["all"] else platform,
+                    language=None if language == tr["all"] else language,
+                    max_records=max_records,
+                    progress_callback=cb,
                 )
+
             pb.progress(1.0)
-            load_all_records.clear()
             st.success(tr["collection_complete"])
-            m1, m2, m3, m4 = st.columns(4)
+
+            
+            hm1, m2, m3, m4 = st.columns(4)
             m1.metric(tr["collected"],  result["collected"])
             m2.metric(tr["saved"],      result["saved"])
             m3.metric(tr["duplicates"], result["duplicates"])
             m4.metric(tr["filtered"],   result["filtered"])
 
-    st.markdown("---")
-    st.markdown(f"#### {tr['recent_records_tbl']}")
-    df = load_all_records()
-    if not df.empty:
-        st.dataframe(
-            df.sort_values("Date", ascending=False)
-              .head(20)[["ID","Platform","Language","Date","Sentiment","Topic"]],
-            use_container_width=True, height=320)
-    else:
-        st.info(tr["no_records"])
-
-pb.progress(1.0)
-            # ✅ These lines force dashboard to reload fresh data
-            st.cache_data.clear()  # clear any remaining cache
-            st.success(tr["collection_complete"])
-            m1, m2, m3, m4 = st.columns(4)
-            m1.metric(tr["collected"],  result["collected"])
-            m2.metric(tr["saved"],      result["saved"])
-            m3.metric(tr["duplicates"], result["duplicates"])
-            m4.metric(tr["filtered"],   result["filtered"])
-            time.sleep(2)
-            st.rerun()  # ← forces entire app to reload with fresh data
-
-
+            time.sleep(1)
+            st.rerun()
 # ═════════════════════════════════════════════════════════════════════════════
 # PAGE: SENTIMENT ANALYSIS
 # ═════════════════════════════════════════════════════════════════════════════
