@@ -21,6 +21,7 @@ from database import (
 )
 from nlp_engine     import analyze_text
 from data_collector import run_collection
+from facebook_url_scraper import render_facebook_scraper_tab
 
 # ── Flag icon ─────────────────────────────────────────────────────────────────
 _flag_path = os.path.join(os.path.dirname(__file__), "flag.png")
@@ -47,6 +48,7 @@ TRANSLATIONS = {
         "language_toggle":      "🌐 Language",
         "nav_dashboard":        "📊 Dashboard",
         "nav_collection":       "🔍 Data Collection",
+        "nav_facebook":         "🔗 Facebook Scraper",
         "nav_sentiment":        "😊 Sentiment Analysis",
         "nav_topics":           "📌 Topic Modeling",
         "nav_trends":           "📈 Trend Analysis",
@@ -169,6 +171,7 @@ TRANSLATIONS = {
         "language_toggle":      "🌐 Langue",
         "nav_dashboard":        "📊 Tableau de bord",
         "nav_collection":       "🔍 Collecte de données",
+        "nav_facebook":         "🔗 Facebook Scraper",
         "nav_sentiment":        "😊 Analyse des sentiments",
         "nav_topics":           "📌 Modélisation des sujets",
         "nav_trends":           "📈 Analyse des tendances",
@@ -554,9 +557,9 @@ def sidebar_nav():
         """, unsafe_allow_html=True)
 
         PAGES_ADMIN = [
-            tr["nav_dashboard"], tr["nav_collection"], tr["nav_sentiment"],
-            tr["nav_topics"],    tr["nav_trends"],     tr["nav_reports"],
-            tr["nav_analyze"],   tr["nav_users"]
+            tr["nav_dashboard"], tr["nav_collection"], tr["nav_facebook"],
+            tr["nav_sentiment"], tr["nav_topics"],     tr["nav_trends"],
+            tr["nav_reports"],   tr["nav_analyze"],    tr["nav_users"]
         ]
         PAGES_ANALYST = [
             tr["nav_dashboard"], tr["nav_sentiment"], tr["nav_topics"],
@@ -722,7 +725,7 @@ def page_data_collection():
             m3.metric(tr["duplicates"], result["duplicates"])
             m4.metric(tr["filtered"],   result["filtered"])
             time.sleep(2)
-            st.rerun()  # ← auto refresh entire app with new data
+            st.rerun()
 
     st.markdown("---")
     st.markdown(f"#### {tr['recent_records_tbl']}")
@@ -734,6 +737,17 @@ def page_data_collection():
             use_container_width=True, height=320)
     else:
         st.info(tr["no_records"])
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# PAGE: FACEBOOK SCRAPER
+# ═════════════════════════════════════════════════════════════════════════════
+def page_facebook_scraper():
+    tr = t()
+    if current_role() != "Administrator":
+        st.error(tr["access_denied"])
+        return
+    render_facebook_scraper_tab(db_path="nlp_system.db")
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -1181,6 +1195,7 @@ def main():
     routes = {
         tr["nav_dashboard"]:  page_dashboard,
         tr["nav_collection"]: page_data_collection,
+        tr["nav_facebook"]:   page_facebook_scraper,
         tr["nav_sentiment"]:  page_sentiment,
         tr["nav_topics"]:     page_topics,
         tr["nav_trends"]:     page_trends,
